@@ -3,6 +3,7 @@ Class which represents the virtual environment for virtual bots
 """
 
 #TODO: make scenario object class for static objects
+#TODO: make physics class
 
 class Playground():
     def __init__(self, session_id, playground_id, is_private):
@@ -34,3 +35,10 @@ class Playground():
 
     def add_bot(self, bot):
         self.bots.append(bot)
+
+    #TODO: simbot class - move function!
+    def move_simbot(self, direction):
+        if self.is_private:
+            #apply physics to direction
+            #self.bots[0].move(direction)
+            pass
