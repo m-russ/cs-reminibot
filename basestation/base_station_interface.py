@@ -59,7 +59,7 @@ class BaseStationHandler(tornado.web.RequestHandler):
 
     def get(self):
         session_id = self.get_secure_cookie("user_id")
-        self.write("Welcome to Base Station " + str(session_id))
+        self.render("../static/basestationgui/index.html", title="Title")
 
 class ClientHandler(tornado.web.RequestHandler):
     """
@@ -74,7 +74,7 @@ class ClientHandler(tornado.web.RequestHandler):
             self.set_secure_cookie("user_id", new_id)
         
         session_id = self.get_secure_cookie("user_id")
-        self.render("../static/gui/index.html", title = "Title")
+        self.render("../static/clientgui/index.html", title = "Title")
 
 
 if __name__ == "__main__":

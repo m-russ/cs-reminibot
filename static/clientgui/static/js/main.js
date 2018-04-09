@@ -16,7 +16,7 @@ class HelloWorld extends React.Component{
     render() {
         return (
             <div>
-                <div> Welcome to Client GUI : </div>
+                <div> Welcome to Client GUI: </div>
                 <div>{this.props.userid}</div>
                 <form>
                     <label>

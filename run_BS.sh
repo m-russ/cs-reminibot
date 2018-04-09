@@ -2,9 +2,13 @@
 
 echo "================= MINIBOT GUI ================="
 cd static
-cd gui
+cd clientgui
 npm run webpack
-echo "=========== WEBPACK SETUP COMPLETE ============"
+echo "=========== WEBPACK SETUP COMPLETE - CLIENT GUI ============"
+cd ..
+cd basestationgui
+npm run webpack
+echo "=========== WEBPACK SETUP COMPLETE - BASESTATION  GUI ============"
 cd ..
 cd ..
 cd basestation

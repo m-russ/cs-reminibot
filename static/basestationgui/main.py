@@ -24,7 +24,7 @@ class ClientInterface:
             ("/", ClientHandler),
         ]
         self.settings = {
-            "static_path": os.path.join(os.path.dirname(__file__), "static")
+            "static_path": os.path.join(os.path.dirname(__file__), "basestation")
         }
         
     def start(self):
