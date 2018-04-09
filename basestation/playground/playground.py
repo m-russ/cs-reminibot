@@ -42,8 +42,20 @@ class Playground():
         self.bots[bot.get_id] = bot
 
     #TODO: simbot class - move function!
-    def move_simbot(self, direction):
-        if self.is_private:
-            #apply physics to direction
-            #self.bots[0].move(direction)
-            pass
+    def move_simbot(self, bot_id, direction):
+        """
+        Applies physics to direction and changes coordinates of simbot
+
+        Returns:
+            new coordinates of bot
+        """
+        # new_direction = apply physics to direction
+
+        if bot_id not in self.bots:
+            raise Exception("Simbot " + bot_id + " cannot be found in playground " + self.get_playground_id())
+
+        #TODO: apply physics to direction
+        self.bots[bot_id].move(new_direction)
+
+        #TODO: returns new coordinates
+
