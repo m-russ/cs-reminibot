@@ -139,7 +139,13 @@ class BaseStation:
             playground_id (str): a unique id
         """
         playground_id = self.generate_id()
-        self.active_playgrounds[playground_id] = Playground(session_id, playground_id, is_private)
+
+        if self.active_sessions.size() == 1 and is_private:
+            raise Exception("Private playground already belongs to a session. Failed to add playground"
+                            + playground_id + " to session " + session_id)
+        
+        self.active_playgrounds[playground_id] = Playground(playground_id, is_private)
+        self.active_playgrounds[playground_id].add_session_to_playground(session_id)
         return playground_id
 
     def remove_playground(self, playground_id):
@@ -165,19 +171,22 @@ class BaseStation:
             raise Exception("Bot is not active. Failed to add bot" + bot_id + " to playground " + playground_id)
 
         #TODO: check bot is a simbot
-        if not isinstance(self.active_bots[bot_id], Simbot):
+        if not isinstance(self.active_bots[bot_id], Simbot()):
             raise Exception("Bot " + bot_id + " is not a Simbot")
 
         playground = self.active_playgrounds[playground_id]
-        
+        bot = self.active_bots[bot_id]
+
         #if playground is private
         if playground.is_private():
             if playground.bots.size() == 1:
                 raise Exception("There is already a bot in playground " + playground_id)
             else:
-                playground.add_bot(bot_id)
+                playground.add_bot(bot)
 
         #if playground is public
         else:
-            playground.add_bot(bot_id)
+            playground.add_bot(bot)
+
+
 
