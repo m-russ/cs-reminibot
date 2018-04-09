@@ -7,7 +7,7 @@ class Session:
     def __init__(self, session_id):
         self.session_id = session_id
         self.bots = {}
-        self.playground = None
+        self.playgrounds = []
 
     def get_session_id(self):
         return self.session_id
@@ -20,3 +20,6 @@ class Session:
 
     def get_playground(self):
         return self.playground
+
+    def add_playground_to_session(self, playground_id):
+        self.playground.append(playground_id)

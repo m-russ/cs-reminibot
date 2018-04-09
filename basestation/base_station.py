@@ -131,7 +131,7 @@ class BaseStation:
 
     # ================== PLAYGROUND ==================
 
-    def add_playground(self, session_id, is_private):
+    def create_new_playground(self, session_id, is_private):
         """
         Adds a new playground to active_playgrounds
 
@@ -140,10 +140,6 @@ class BaseStation:
         """
         playground_id = self.generate_id()
 
-        if self.active_sessions.size() == 1 and is_private:
-            raise Exception("Private playground already belongs to a session. Failed to add playground"
-                            + playground_id + " to session " + session_id)
-        
         self.active_playgrounds[playground_id] = Playground(playground_id, is_private)
         self.active_playgrounds[playground_id].add_session_to_playground(session_id)
         return playground_id
@@ -187,6 +183,27 @@ class BaseStation:
         #if playground is public
         else:
             playground.add_bot(bot)
+
+        return playground.bots
+
+    def add_public_playground_to_session(self, playground_id, session_id):
+        """
+            Adds public playground to certain session
+        """
+
+        if session_id not in self.active_sessions:
+            raise Exception("Session " + session_id + " is not active.")
+
+        if playground_id not in self.active_playgrounds:
+            raise Exception("Playground " + playground_id + " not found, cannot add to session " + session_id)
+
+        if self.active_playgrounds[playground_id].is_private:
+            raise Exception("Playground " + playground_id + " is a private playground, cannot add to session " + session_id)
+
+        self.active_playgrounds[playground_id].add_session_to_playground(session_id)
+        self.active_sessions[session_id].add_playground_to_session(playground_id)
+
+
 
 
 
