@@ -9,7 +9,7 @@ class AddBot extends React.Component {
             bot_name: "",
             bot_list: [],
             selected_bot: "",
-            power: 0
+            power: 50
         };
 
         this.updateInputValue = this.updateInputValue.bind(this);
@@ -43,8 +43,6 @@ class AddBot extends React.Component {
     addBotListener(event) {
         let li = this.state.bot_list;
         let bot_name = this.state.bot_name
-        li.push(bot_name);
-        this.setState({bot_list: li, selected_bot: bot_name});
 
         const _this = this;
         axios({
@@ -57,9 +55,12 @@ class AddBot extends React.Component {
             })
                 .then(function(response) {
                     console.log('Succesfully Added');
+                    li.push(bot_name);
+                    _this.setState({bot_list: li, selected_bot: bot_name});
             })
                 .catch(function (error) {
                     console.log(error);
+                    console.log("Invalid Bot Name");
         })
     }
 
@@ -105,7 +106,7 @@ class AddBot extends React.Component {
                     <tbody>
                         <tr>
                             <td>
-                            <div>Bot Name:</div>
+                            <strong>Bot Name:</strong>
                             <form>
                                 <label>
                                     <input type="text" name="bot_name" onChange={evt => this.updateInputValue(evt)}/>
@@ -115,7 +116,9 @@ class AddBot extends React.Component {
                             <td><button style={styles.Button} onClick={this.addBotListener}>Add Bot</button></td>
                         </tr>
                         <tr>
-                        <td><div> Bot List: </div></td>
+                        <td>
+                        <strong>Bot List: </strong>
+                        </td>
                         <td><select style={styles.Select} onChange={this.selectBotListener}>
                             {
                                 this.state.bot_list.map(function(bot_name, idx){
@@ -131,7 +134,13 @@ class AddBot extends React.Component {
                     </tbody>
                 </table>
                 <div>
-                    Movement
+                    <strong>Movement</strong>
+                    <form>
+                        <label>
+                            Power
+                            <input type="text" name="wheel_power" value={50} onChange={evt => this.updatePowerValue(evt)}/>
+                        </label>
+                    </form>
                     <table>
                         <tbody>
                         <tr>
@@ -151,12 +160,6 @@ class AddBot extends React.Component {
                         </tr>
                         </tbody>
                     </table>
-                    <form>
-                        <label>
-                            Power
-                            <input type="text" name="wheel_power" onChange={evt => this.updatePowerValue(evt)}/>
-                        </label>
-                    </form>
                 </div>
             </div>
         );
