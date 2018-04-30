@@ -33,7 +33,7 @@ class BaseInterface:
         self.handlers = [
             ("/", BaseStationHandler, dict(base_station=self.base_station)),
             ("/start", ClientHandler, dict(base_station=self.base_station)),
-            ("/vision", VisionHandler, dict(base_station=self.base_station))
+            ("/vision", VisionHandler)
         ]
         self.locations = {}
 
@@ -79,20 +79,21 @@ class ClientHandler(tornado.web.RequestHandler):
         self.render("../static/gui/index.html", title = "Title")
 
 class VisionHandler(tornado.websocket.WebSocketHandler):
-    #this is an example implementation of websockets in Tornado
+    #this is NOT an example implementation of websockets in Tornado
+
+    def initialize(self):
+        self.locations = []
 
     def get(self):
-        botlist = []
-        for k in self.locations:
-            v = self.locations[k]
-            botlist.append({'id': k, 'x': v['x'], 'y': v['y'], 'size': v['size'], 'angle': v['angle'], 'type': v['type']})
-        self.write(json.dumps(botlist).encode())
+        self.write(json.dumps(self.locations).encode())
 
     def post(self):
         info = json.loads(self.request.body.decode())
-        print("Received vision info: ", info)
-        tag_id = info['id']
-        x, y, z = info['x'], info['y'], info['z']
+        #print("Received vision info: ", info)
+        self.locations = {'id': info['id'], 'x': info['x'], 'y': info['y'], 'z': info['z']}
+        print("Received vision info: ", self.locations)
+        tag_id = self.locations['id']
+        x, y, z = self.locations['x'], self.locations['y'], self.locations['z']
         logging.info("Received vision data " + str((tag_id, x, y, z)))
 
     def check_origin(self, origin):
