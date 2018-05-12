@@ -9,6 +9,7 @@ import os.path
 import json
 import logging
 import sys
+import time
 
 # Minibot imports.
 from base_station import BaseStation
@@ -111,6 +112,7 @@ class ClientHandler(tornado.web.RequestHandler):
             if len(value) == 0:
                 print("GETTING SCRIPTS")
                 bot.sendKV("SCRIPTS", '')
+                print(bot.tcp_listener_thread.scripts)
 
             elif len(value) == 1:
                 print("SENDING SCRIPTS")

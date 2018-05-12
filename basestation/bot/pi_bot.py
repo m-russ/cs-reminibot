@@ -41,6 +41,7 @@ class PiBot(BaseStationBot, object):
         def __init__(self, t):
             super().__init__()
             self.tcp_connection = t
+            self.scripts = []
 
         def run(self):
             """
@@ -48,8 +49,10 @@ class PiBot(BaseStationBot, object):
             """
             try:
                 while True:
+                    print("running")
                     if self.tcp_connection.is_connection_active():
                         msg = self.tcp_connection.receive()
+                        print(msg)
                         if msg is not None:
                             self.tcp_parse_incoming(msg)
             except RuntimeError as e:
@@ -60,6 +63,7 @@ class PiBot(BaseStationBot, object):
             """
             parse incoming data
             """
+            print("parsing")
             start = data.find("<<<<")
             end = data.find(">>>>")
             comma = data.find(",")
