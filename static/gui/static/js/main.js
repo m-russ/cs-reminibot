@@ -240,6 +240,8 @@ class Scripts extends React.Component {
              })
                  .then(function(response) {
                      _this.setState({scripts: response.data});
+                     console.log(response.data)
+                     console.log("got scripts to gui!")
              })
                  .catch(function (error) {
                      console.log(error);
@@ -262,11 +264,19 @@ class Scripts extends React.Component {
             <div>
                 <div> Scripts For:  {this.props.bot_name} </div>
                 <div>
-                    <div>Select Script</div>
+                    <div> <div>Select Script to run:</div>
+                        <select>
+                            {this.state.scripts.map(function(script, idx){
+                                return <option
+                                            key={idx}
+                                            value={script}>
+                                            {script}</option>
+                                })
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div> Run Script </div>
                 <div> <Python bot_name={this.state.bot_name}/> </div>
-                <div> Save Script </div>
             </div>
 
         )
