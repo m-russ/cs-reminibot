@@ -49,7 +49,6 @@ class PiBot(BaseStationBot, object):
             """
             try:
                 while True:
-                    print("running")
                     if self.tcp_connection.is_connection_active():
                         msg = self.tcp_connection.receive()
                         print(msg)

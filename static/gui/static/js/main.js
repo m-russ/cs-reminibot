@@ -223,6 +223,7 @@ class Scripts extends React.Component {
         }
 
         this.getScripts = this.getScripts.bind(this);
+        this.selectScriptListener = this.selectScriptListener.bind(this);
     }
 
     //data field is empty
@@ -259,13 +260,17 @@ class Scripts extends React.Component {
         }
     }
 
+    selectScriptListener(){
+        console.log("run script")
+    }
+
     render() {
         return (
             <div>
                 <div> Scripts For:  {this.props.bot_name} </div>
                 <div>
                     <div> <div>Select Script to run:</div>
-                        <select>
+                        <select onChange={this.selectScriptListener}>
                             {this.state.scripts.map(function(script, idx){
                                 return <option
                                             key={idx}
