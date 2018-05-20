@@ -126,6 +126,14 @@ class ClientHandler(tornado.web.RequestHandler):
                 elif len(value) == 2:
                     print("SAVING SCRIPTS")
                     bot.sendKV("SCRIPTS", ",".join(value))
+        elif key == "RUNSCRIPTS":
+            value = data['value']
+            bot_name = data['bot_name']
+            bot_id = self.base_station.bot_name_to_bot_id(bot_name);
+            bot = self.base_station.get_bot(bot_id)
+            print(value)
+            if bot:
+                bot.sendKV("RUNSCRIPTS", value)
         elif key == "DISCONNECTBOT":
             bot_name = data['bot']
             bot_id = self.base_station.bot_name_to_bot_id(bot_name)

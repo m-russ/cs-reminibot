@@ -260,8 +260,22 @@ class Scripts extends React.Component {
         }
     }
 
-    selectScriptListener(){
-        console.log("run script")
+    selectScriptListener(event){
+        axios({
+            method:'POST',
+            url:'/start',
+            data: JSON.stringify({
+                key: 'RUNSCRIPTS',
+                value: event.target.value,
+                bot_name: this.props.bot_name
+            }),
+        })
+        .then(function(response) {
+            console.log('selected script');
+        })
+        .catch(function (error) {
+            console.warn(error);
+        });
     }
 
     render() {
