@@ -189,6 +189,9 @@ class BaseStation:
         print("Calibration is " + str(calib))
         direction = direction.lower()
         power = float(power)
+
+        left = int(power)
+        right = int(power)
         
         if direction == "forward" or direction == "fw":
             left = int(calib[0] + power)
