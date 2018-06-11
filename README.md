@@ -21,12 +21,24 @@ Software resources:
  - Adafruit RPi libraries (TCS34725)
  
 ## Installing Dependencies 
-Navigate to the gui directory in static/gui and basestation/gui and run 
+Navigate to the gui directories in static/gui and static/basestation_gui 
+```
+cd cs-reminibot/static/gui 
+```
+```
+cd cs-reminibot/static/basestation_gui 
+```
+and run 
 ```
 npm install
 ```
+for each directory. 
 
-If npm does not exist, install it with pip or other package downloader. In the future, this process will be incorporated into a bash file. 
+If npm does not exist, install it with pip or other package downloader (https://nodejs.org/en/download/). To check whether or not npm was installed properly run 
+```
+npm -v
+```
+If it was installed properly, it should output the version number. In the future, this process will be incorporated into a bash file. 
 
 ## Run the BaseStation
 
@@ -37,7 +49,7 @@ The BaseStation is the intermediary that manages information flow between the mi
 hardware to the software and GUI. BaseStation runs on `cs-reminibot/basestation/base_station_interface.py` and is a
 simple web application that runs on HTTP.
 
-To run the BaseStation, run the following line in your terminal from the root directory
+To run the BaseStation, run the following line in your terminal from the root directory (cs-reminibot)
 of this repo.
 
 ```
