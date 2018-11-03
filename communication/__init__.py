@@ -1,2 +1,2 @@
-import MiniBotFramework.Controls.Xbox
-import MiniBotFramework.Lib
+import minibot.communication.Xbox
+import minibot.library
