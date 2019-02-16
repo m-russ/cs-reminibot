@@ -112,5 +112,5 @@ ENV/
 
 node_modules/
 
-gui/package-lock.json
+package-lock.json
 
