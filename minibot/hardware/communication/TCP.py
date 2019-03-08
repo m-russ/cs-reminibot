@@ -2,10 +2,12 @@
 from socket import *
 import multiprocessing, time, signal, os, sys, threading, socket
 from threading import Thread
+import picamera
 
 
 PORT = 10000
 IP = ""
+
 
 class TCP(object):
 
@@ -14,14 +16,14 @@ class TCP(object):
     def __init__(self):
         self.server_socket = socket.socket(AF_INET, SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server_socket.bind( (IP, PORT) )
+        self.server_socket.bind((IP, PORT))
         self.server_socket.listen(1)
-        self.thread_tcp = Thread(target = self.run)
+        self.thread_tcp = Thread(target=self.run)
         self.thread_tcp.start()
         self.command = ""
         self.active = False
         TCP.tcp = self
-        
+
     def isConnected(self):
         """
         :return true if connection is active
@@ -30,6 +32,9 @@ class TCP(object):
 
     def set_command(self, command):
         self.command = command
+
+    def get_socket(self):
+        return self.server_socket
 
     def get_command(self):
         temp = self.command
@@ -47,7 +52,13 @@ class TCP(object):
             message = "<<<<" + key + "," + value + ">>>>"
             # appending \n to the message as java reader socket blocks until new line is encountered
             print("SENDNING data to basestation")
-            self.connectionSocket.send(message.encode('utf-8'))
+            fileConnection = self.connectionSocket.send(message.encode("utf-8"))
+
+    def send_cam_to_basestation(self, camera):
+        print(self.active)
+        if self.active:
+            connectionfile = self.connectionSocket.makefile("wb")
+            camera.start_recording(connectionfile, "h264")
 
     def run(self):
         while TCP.tcp is None:
@@ -57,7 +68,7 @@ class TCP(object):
             self.connectionSocket, self.addr = self.server_socket.accept()
             self.connectionSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             print("Connection accepted")
-            self.active=True
+            self.active = True
             while self.active:
                 command = ""
                 while self.active:
@@ -76,6 +87,6 @@ class TCP(object):
                     end_index = command.find(">>>>")
                     # In case of command overload
                     while end_index > 0:
-                        self.set_command(command[0:end_index+4])
-                        command = command[end_index+4:]
+                        self.set_command(command[0 : end_index + 4])
+                        command = command[end_index + 4 :]
                         end_index = command.find(">>>>")

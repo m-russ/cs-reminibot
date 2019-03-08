@@ -9,8 +9,8 @@ from util.exception_handling import *
 
 import socket
 
-class TCPConnection(object):
 
+class TCPConnection(object):
     def __init__(self, ip, port=10000):
         """
         Initialize a TCP connection between this device and the the
@@ -23,8 +23,7 @@ class TCPConnection(object):
         self.__IP = ip
         self.__port = port
         try:
-            self.__client_socket = socket.create_connection((self.__IP,
-                                                             self.__port))
+            self.__client_socket = socket.create_connection((self.__IP, self.__port))
             self.__connection_refused = False
 
         except socket.error as e:
@@ -90,8 +89,10 @@ class TCPConnection(object):
             return True
 
         except socket.error as e:
-            msg = "Unable to send the message \"" + key + "," + value + "\" " \
+            msg = (
+                'Unable to send the message "' + key + "," + value + '" '
                 "to " + self.__IP + "."
+            )
             log_exn_info(e, msg=msg)
             return False
 

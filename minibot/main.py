@@ -12,6 +12,7 @@ from threading import Thread
 import time
 import importlib
 import os
+from picamera import PiCamera
 
 from os import listdir
 from os.path import isfile, join
@@ -21,9 +22,11 @@ from os.path import isfile, join
     Reloads file when it is run from GUI to reflect changes.
 """
 
-CONFIG_LOCATION = '/home/pi/cs-reminibot/minibot/configs/config.json'
+CONFIG_LOCATION = "/home/pi/cs-reminibot/minibot/configs/config.json"
 
 p = None
+
+
 def main():
     print("Initializing Minibot Software")
     p = None
@@ -32,12 +35,22 @@ def main():
     bot = Bot(config)
     tcpInstance = TCP()
     print(tcpInstance)
-    thread_udp = Thread(target= minibot.hardware.communication.UDP.udpBeacon)
+    thread_udp = Thread(target=minibot.hardware.communication.UDP.udpBeacon)
     thread_udp.start()
-    while True:
-        tcpCmd = tcpInstance.get_command()
-        parse_command(tcpCmd, bot, tcpInstance)
-        time.sleep(0.01)
+    # adding picam things
+    try:
+        camera = picamera.PiCamera()
+        camera.resolution = (680, 480)
+        camera.start_recording(tcpInstance)
+    except:
+        print("PiCamera is not connected")
+    finally:
+        while True:
+            tcpCmd = tcpInstance.get_command()
+            tcpInstance.send_cam_to_basestation(camera)
+            parse_command(tcpCmd, bot, tcpInstance)
+            time.sleep(0.01)
+
 
 def parse_command(cmd, bot, tcpInstance):
     """
@@ -52,8 +65,8 @@ def parse_command(cmd, bot, tcpInstance):
     comma = cmd.find(",")
     start = cmd.find("<<<<")
     end = cmd.find(">>>>")
-    key = cmd[start + 4:comma]
-    value = cmd[comma + 1:end]
+    key = cmd[start + 4 : comma]
+    value = cmd[comma + 1 : end]
     if key == "WHEELS":
         try:
             values = value.split(",")
@@ -75,7 +88,7 @@ def parse_command(cmd, bot, tcpInstance):
             print("RUNNING SCRIPTS")
         elif len(values) == 2:
             print("SAVING SCRIPTS")
-            file = open("/home/pi/cs-reminibot/minibot/scripts/" + values[0], 'w')
+            file = open("/home/pi/cs-reminibot/minibot/scripts/" + values[0], "w")
             val = process_string(values[1])
             file.write(val)
             file.close()
@@ -87,17 +100,19 @@ def parse_command(cmd, bot, tcpInstance):
         status = {}
         status["motor_power"] = bot.get_wheel_power()
         status["sensor_data"] = bot.get_sensor_data()
-        
-        status = str(status).replace("'", "\"")
+
+        status = str(status).replace("'", '"')
         tcpInstance.send_to_basestation("BOTSTATUS", status)
+
 
 def process_string(value):
     cmds = value.splitlines()
     str = "def run(bot):\n"
     for i in range(len(cmds)):
-        str += "    " + cmds[i]+ "\n"
+        str += "    " + cmds[i] + "\n"
     print(str)
     return str
+
 
 def spawn_script_process(p, bot, scriptname):
     time.sleep(0.1)
@@ -105,10 +120,12 @@ def spawn_script_process(p, bot, scriptname):
     p.start()
     return p
 
+
 def run_script(bot, scriptname):
     index = scriptname.find(".")
-    script = importlib.import_module("minibot.scripts." + scriptname[0: index])
+    script = importlib.import_module("minibot.scripts." + scriptname[0:index])
     script.run(bot)
+
 
 if __name__ == "__main__":
     main()
